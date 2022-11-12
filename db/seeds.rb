@@ -10,14 +10,20 @@
 puts "Cleaning database..."
 Restaurant.destroy_all
 
-puts "Creating data samples"
+puts "Creating data samples ..."
 
-20.times do
+10.times do
   name = Faker::Restaurant.name
   address = Faker::Address.street_address
-  phone_number = Faker::Number.number(digits: 10)
+  phone_number = Faker::PhoneNumber.cell_phone_in_e164
   category = ["chinese", "italian", "japanese", "french", "belgian"].sample
-  Restaurant.create(name: name, address: address, phone_number: phone_number, category: category)
+  new_restaurant = Restaurant.create(name: name, address: address, phone_number: phone_number, category: category)
+
+  5.times do
+    content = Faker::Hipster.words.join(" ")
+    rating = (1..5).to_a.sample
+    new_review = Review.create(restaurant_id: new_restaurant.id, content: content, rating: rating)
+  end
 end
 
-puts "Finished creatigng 20 restaurant samples"
+puts "Finished creatigng 10 restaurant samples!"
